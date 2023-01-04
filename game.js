@@ -3,7 +3,8 @@ const MAX_QUESTIONS = 3;
 
 const question = document.getElementById("question");
 const choices = Array.from(document.getElementsByClassName("choice-text")); 
-// console.log(choices)
+const questionCounterText = document.getElementById("questionCounter");
+const scoreText = document.getElementById("score");
 
 let currentQuestion = {};
 let acceptingAnswers = false;
@@ -42,15 +43,17 @@ startGame = () => {
     score = 0;
     questionCounter = 0;
     availableQuestions = [...questions];
-    console.log("availableQuestions1",availableQuestions)
     getNewQuestion();
 }
 
 getNewQuestion = () => {
-    // if(availableQuestions.length === 0 || questionCounter > MAX_QUESTIONS) {
-    //     return window.location.assign("/score.html");
-    // }
+    if(availableQuestions.length === 0 || questionCounter > MAX_QUESTIONS) {
+        return window.location.assign("/score.html");
+    } 
     questionCounter ++;
+
+    questionCounterText.innerText = `${questionCounter}/${MAX_QUESTIONS}`;
+
     const questionIndex = Math.floor(Math.random() * availableQuestions.length);
     currentQuestion = availableQuestions[questionIndex]
     question.innerText = currentQuestion.question
@@ -76,6 +79,9 @@ choices.forEach(choice => {
 
         selectedChoice.parentElement.classList.add(classToApply);
 
+        currentQuestion.answer == selectedAnswer ? score += CORRECT_BONUS : score;
+        scoreText.innerText = score;
+
         setTimeout(()=>{
             selectedChoice.parentElement.classList.remove(classToApply);
             getNewQuestion();
@@ -84,4 +90,4 @@ choices.forEach(choice => {
     })
 })
 
-startGame()
+startGame();
